@@ -1,4 +1,4 @@
-import keyMirror from 'react/lib/keyMirror';
+import keyMirror from 'keyMirror';
 
 export default {
   // event name triggered from store, listened to by views
@@ -27,5 +27,12 @@ export default {
   ActionSources: keyMirror({
     SERVER_ACTION: null,
     VIEW_ACTION: null
+  }),
+
+  BattleStates: keyMirror({
+    NO_BATTLE: null,
+    LOADING: null,
+    BATTLE: null,
+    DEFEAT: null
   })
 };

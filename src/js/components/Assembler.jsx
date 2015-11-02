@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import SearchCharacter from './SearchCharacter.jsx';
 import Team from './Team.jsx';
 import TeamActionCreators from '../actions/TeamActionCreators';
-import TeamStore from '../stores/TeamStore';
+import Store from '../Store';
 import Config from '../Config';
 import { Link } from 'react-router'
 
@@ -15,16 +15,16 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    TeamStore.addChangeListener(this._onChange);
+    this.unsubscribe = Store.subscribe(this._onChange);
   },
 
   componentWillUnmount() {
-    TeamStore.removeChangeListener(this._onChange);
+    this.unsubscribe();
   },
 
   _onChange() {
     this.setState({
-      full: TeamStore.getState().characters.length === Config.TEAM_MAX_SIZE
+      full: Store.getState().characters.length === Config.TEAM_MAX_SIZE
     });
   },
 
@@ -37,7 +37,7 @@ export default React.createClass({
 
   render() {
 
-    var hidden = !this.state.full ? "hidden" : "";
+    var hidden = !this.state.full ? 'hidden' : '';
 
     return (
       <div>

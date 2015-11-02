@@ -1,4 +1,3 @@
-import Dispatcher from '../Dispatcher';
 import Constants from '../Constants';
 import Config from '../Config';
 import URL from 'url';
@@ -12,41 +11,41 @@ export default {
    */
   startSearch(text) {
 
-    text = text.trim();
+    var text = text.trim();
 
     if (text === "") {
-      return Dispatcher.handleViewAction({
+      return {
         type: Constants.ActionTypes.CHARACTER_SEARCH_CLEAR
-      });
+      };
     }
 
-    Dispatcher.handleViewAction({
+    return {
       type: Constants.ActionTypes.CHARACTER_SEARCH_STARTED
-    });
+    };
 
-    var url = URL.format({
-      host: Config.MARVEL_API_URI_HOST,
-      pathname: Config.MARVEL_API_URI_PATHNAME + Config.MARVEL_API_URI_CHARACTERS,
-      query: {
-        nameStartsWith: text,
-        apikey: Config.MARVEL_API_PUBLIC_KEY
-      }
-    });
+    // var url = URL.format({
+    //   host: Config.MARVEL_API_URI_HOST,
+    //   pathname: Config.MARVEL_API_URI_PATHNAME + Config.MARVEL_API_URI_CHARACTERS,
+    //   query: {
+    //     nameStartsWith: text,
+    //     apikey: Config.MARVEL_API_PUBLIC_KEY
+    //   }
+    // });
 
-    fetch(url)
-    .then((response) => response.json())
-    .then((json) => {
-      Dispatcher.handleServerAction({
-        type: Constants.ActionTypes.CHARACTER_SEARCH_FINISHED,
-        data: json
-      });
-    })
-    .catch((err) => {
-      Dispatcher.handleServerAction({
-        type: Constants.ActionTypes.CHARACTER_SEARCH_FAILED,
-        err: err
-      });
-    });
+    // fetch(url)
+    // .then((response) => response.json())
+    // .then((json) => {
+    //   Dispatcher.handleServerAction({
+    //     type: Constants.ActionTypes.CHARACTER_SEARCH_FINISHED,
+    //     data: json
+    //   });
+    // })
+    // .catch((err) => {
+    //   Dispatcher.handleServerAction({
+    //     type: Constants.ActionTypes.CHARACTER_SEARCH_FAILED,
+    //     err: err
+    //   });
+    // });
 
   }
 };

@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import ActionCreators from '../actions/SearchCharacterActionCreators';
 import Config from '../Config';
-import Store from '../stores/SearchStore';
-import TeamStore from '../stores/TeamStore';
+import Store from '../Store';
 
 export default React.createClass({
 
@@ -17,13 +16,11 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    Store.addChangeListener(this._onChange);
-    TeamStore.addChangeListener(this._onChange);
+    this.unsubscribe = Store.subscribe(this._onChange);
   },
 
   componentWillUnmount() {
-    Store.removeChangeListener(this._onChange);
-    TeamStore.removeChangeListener(this._onChange);
+    this.unsubscribe();
   },
 
   _onChange() {
@@ -41,12 +38,12 @@ export default React.createClass({
       clearTimeout(this.typingCooldown);
     }
     this.typingCooldown = setTimeout(() => {
-      ActionCreators.startSearch(this.refs.search.getDOMNode().value);
+      ActionCreators.startSearch(this.refs.search.value);
     }, this.TYPING_COOLDOWN_DURATION);
   },
 
   resetSearch() {
-    this.refs.search.getDOMNode().value = '';
+    this.refs.search.value = '';
     ActionCreators.startSearch("");
   },
 
@@ -72,7 +69,7 @@ export default React.createClass({
    * Renders all results below the search field
    */
   renderResults() {
-    return this.state.results.map((character) => {
+    return this.state.search.get('results').map((character) => {
       return (
         <div className='characterSearchResult' key={character.id} onClick={this.selectCharacter.bind(this, character)}>
           <img src={character.thumbnail} />
@@ -86,7 +83,7 @@ export default React.createClass({
    * Checks of you reached the team size limit
    */
   canAddNewMember() {
-    return TeamStore.getState().characters.length < Config.TEAM_MAX_SIZE;
+    return Store.getState().team.count() < Config.TEAM_MAX_SIZE;
   },
 
   searchPlaceholder() {

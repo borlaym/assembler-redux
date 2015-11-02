@@ -1,8 +1,8 @@
 import React from 'react';
-import TeamStore from '../stores/TeamStore';
-import BattleStore from '../stores/BattleStore';
+import Store from '../Store';
 import { Link } from 'react-router';
 import Config from '../Config';
+import { BattleStates } from '../Constants';
 import assign from 'object-assign';
 import Team from './Team.jsx';
 import Character from './Character.jsx';
@@ -11,32 +11,24 @@ import BattleActionCreators from '../actions/BattleActionCreators';
 export default React.createClass({
   getInitialState() {
     return {
-      team: TeamStore.getState(),
-      battle: BattleStore.getState()
+      team: Store.getState(),
+      battle: Store.getState()
     };
   },
 
   componentDidMount() {
-    TeamStore.addChangeListener(this._onTeamChange);
-    BattleStore.addChangeListener(this._onBattleChange);
+    this.unsubscribe = Store.subscribe(this._onChange);
   },
 
   componentWillUnmount() {
-    TeamStore.removeChangeListener(this._onTeamChange);
-    BattleStore.removeChangeListener(this._onBattleChange);
+    this.unsubscribe();
   },
 
-  _onTeamChange() {
-    this.setState({
-      team: TeamStore.getState()
-    });
+  _onChange(state) {
+    console.log(state);
+    this.setState(state);
   },
 
-  _onBattleChange() {
-    this.setState({
-      battle: BattleStore.getState()
-    });
-  },
 
   /**
    * Determines if you're able to fight
@@ -69,10 +61,10 @@ export default React.createClass({
    * Renders either a Next Fight button or the villain you face
    */
   renderVillain() {
-    if (this.state.battle.state === BattleStore.BATTLE_STATES.NO_BATTLE) return (
+    if (this.state.battle.state === BattleStates.NO_BATTLE) return (
       <button className='btn' onClick={this.nextFight}>Next Fight</button>
     );
-    else if (this.state.battle.state === BattleStore.BATTLE_STATES.LOADING) return (
+    else if (this.state.battle.state === BattleStates.LOADING) return (
       <p>Loading...</p>
     )
     else return (
@@ -99,7 +91,7 @@ export default React.createClass({
   },
 
   render() {
-    if (this.state.battle.state === BattleStore.BATTLE_STATES.DEFEAT) return this.renderDefeat();
+    if (this.state.battle.state === BattleStates.DEFEAT) return this.renderDefeat();
     if (!this.canFight()) return this.renderNoTeam();
     return (
       <div className="battle">

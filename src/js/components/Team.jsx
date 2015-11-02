@@ -1,7 +1,6 @@
 import React from 'react';
 import Character from './Character.jsx';
-import Store from '../stores/TeamStore';
-import TeamStore from '../stores/TeamStore';
+import Store from '../Store';
 import Config from '../Config';
 import { Link } from 'react-router';
 
@@ -12,13 +11,11 @@ export default React.createClass({
   },
 
   componentDidMount() {
-    Store.addChangeListener(this._onChange);
-    TeamStore.addChangeListener(this._onChange);
+    this.unsubscribe = Store.subscribe(this._onChange);
   },
 
   componentWillUnmount() {
-    Store.removeChangeListener(this._onChange);
-    TeamStore.removeChangeListener(this._onChange);
+    this.unsubscribe();
   },
 
   _onChange() {
@@ -26,7 +23,7 @@ export default React.createClass({
   },
 
   renderTeam() {
-    return this.state.characters.map(function(character) {
+    return this.state.team.map(function(character) {
       return (<Character character={character} key={character.id} />);
     });
   },
