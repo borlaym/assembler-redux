@@ -1,8 +1,7 @@
 /**
  * Formats the JSON response from the Marvel API into character profiles used by the application
  */
-export default function(json) {
-  let character = json.data.results[0];
+export default function(character) {
   return {
     id: character.id,
     strenght: character.comics.available,

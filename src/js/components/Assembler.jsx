@@ -24,7 +24,7 @@ export default React.createClass({
 
   _onChange() {
     this.setState({
-      full: Store.getState().characters.length === Config.TEAM_MAX_SIZE
+      full: Store.getState().team.count() === Config.TEAM_MAX_SIZE
     });
   },
 

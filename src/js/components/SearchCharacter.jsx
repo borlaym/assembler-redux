@@ -12,7 +12,7 @@ export default React.createClass({
   TYPING_COOLDOWN_DURATION: 600,
 
   getInitialState() {
-    return Store.getState();
+    return Store.getState().search.toJSON();
   },
 
   componentDidMount() {
@@ -24,7 +24,8 @@ export default React.createClass({
   },
 
   _onChange() {
-    this.setState(Store.getState());
+    console.log(Store.getState().search.toJSON());
+    this.setState(Store.getState().search.toJSON());
   },
 
   typingCooldown: null,
@@ -38,13 +39,13 @@ export default React.createClass({
       clearTimeout(this.typingCooldown);
     }
     this.typingCooldown = setTimeout(() => {
-      ActionCreators.startSearch(this.refs.search.value);
+      Store.dispatch(ActionCreators.startSearch(this.refs.search.value));
     }, this.TYPING_COOLDOWN_DURATION);
   },
 
   resetSearch() {
     this.refs.search.value = '';
-    ActionCreators.startSearch("");
+    Store.dispatch(ActionCreators.startSearch(""));
   },
 
   /**
@@ -69,7 +70,7 @@ export default React.createClass({
    * Renders all results below the search field
    */
   renderResults() {
-    return this.state.search.get('results').map((character) => {
+    return this.state.results.map((character) => {
       return (
         <div className='characterSearchResult' key={character.id} onClick={this.selectCharacter.bind(this, character)}>
           <img src={character.thumbnail} />
