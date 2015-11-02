@@ -22,9 +22,10 @@ export default function(state = Immutable.Set(), action) {
       return character;
     }));
   case ActionTypes.BATTLE_VICTORY:
-    return state.map((character) => character.merge({
-      isFighting: false,
-      defeated: false
+    return Immutable.Set(state.map((character) => {
+      character.isFighting = false;
+      character.defeated = false;
+      return character;
     }));
   case ActionTypes.BATTLE_DEFEAT:
     return Immutable.Set();

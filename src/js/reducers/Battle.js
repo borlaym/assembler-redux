@@ -8,6 +8,7 @@ const defaultState = Immutable.Map({
 });
 
 export default function(state = defaultState, action) {
+  
     switch (action.type) {
     case ActionTypes.BATTLE_RESET:
       return state.set('state', BattleStates.NO_BATTLE);
@@ -20,6 +21,7 @@ export default function(state = defaultState, action) {
       });
     case ActionTypes.BATTLE_RESULTS:
       if (action.villain) return state.setIn(['villain', 'defeated'], true);
+      else return state;
     case ActionTypes.BATTLE_VICTORY:
       return state.set('state', BattleStates.NO_BATTLE);
     case ActionTypes.BATTLE_DEFEAT:
