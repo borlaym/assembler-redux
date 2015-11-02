@@ -9,15 +9,18 @@ export default function(state = Immutable.Set(), action) {
   case ActionTypes.TEAM_REMOVE_CHARACTER:
     return state.remove(action.character);
   case ActionTypes.BATTLE_START:
-    return state.map((character) => character.set('isFighting', true));
-  case ActionTypes.BATTLE_RESULTS:
-    if (action.hero) return state.map((character) => {
-      if (character.id === action.hero.id) return character.merge({
-        defeated: true,
-        isFighting: false
-      });
+    return Immutable.Set(state.map((character) => {
+      character.isFighting = true;
       return character;
-    });
+    }));
+  case ActionTypes.BATTLE_RESULTS:
+    if (action.hero) return Immutable.Set(state.map((character) => {
+      if (character.id === action.hero.id) {
+        character.defeated = true;
+        character.isFighting = false;
+      } 
+      return character;
+    }));
   case ActionTypes.BATTLE_VICTORY:
     return state.map((character) => character.merge({
       isFighting: false,

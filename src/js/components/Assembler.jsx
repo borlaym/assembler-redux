@@ -43,10 +43,10 @@ export default React.createClass({
       <div>
         <h1>Assembler</h1>
         <p>Assemble your own Avengers team!</p>
-        <SearchCharacter onSelect={this.selectCharacter} />
+        <SearchCharacter onSelect={this.selectCharacter} store={Store} />
         <h3>Your team:</h3>
         <Team store={Store} />
-        <Link to="battle" className={hidden}>Save the Earth!</Link>
+        <Link to="/battle" className={hidden}>Save the Earth!</Link>
       </div>
     );
   }

@@ -8,7 +8,6 @@ const defaultState = Immutable.Map({
 });
 
 export default function(state = defaultState, action) {
-
     switch (action.type) {
     case ActionTypes.BATTLE_RESET:
       return state.set('state', BattleStates.NO_BATTLE);

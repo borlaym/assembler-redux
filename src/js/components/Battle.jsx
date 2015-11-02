@@ -3,17 +3,17 @@ import Store from '../Store';
 import { Link } from 'react-router';
 import Config from '../Config';
 import { BattleStates } from '../Constants';
-import assign from 'object-assign';
 import Team from './Team.jsx';
 import Character from './Character.jsx';
 import BattleActionCreators from '../actions/BattleActionCreators';
 
 export default React.createClass({
   getInitialState() {
+    var state = Store.getState();
     return {
-      team: Store.getState(),
-      battle: Store.getState()
-    };
+      team: state.team.toArray(),
+      battle: state.battle.toJS()
+    }
   },
 
   componentDidMount() {
@@ -24,9 +24,12 @@ export default React.createClass({
     this.unsubscribe();
   },
 
-  _onChange(state) {
-    console.log(state);
-    this.setState(state);
+  _onChange() {
+    var state = Store.getState();
+    this.setState({
+      team: state.team.toArray(),
+      battle: state.battle.toJS()
+    });
   },
 
 
@@ -34,7 +37,7 @@ export default React.createClass({
    * Determines if you're able to fight
    */
   canFight() {
-    return this.state.team.characters.length === Config.TEAM_MAX_SIZE;
+    return this.state.team.length === Config.TEAM_MAX_SIZE;
   },
 
   /**
@@ -54,7 +57,7 @@ export default React.createClass({
    * Go to the next fight
    */
   nextFight() {
-    BattleActionCreators.battleNextVillain(this.state.team.characters);
+    Store.dispatch(BattleActionCreators.battleNextVillain(this.state.team));
   },
 
   /**
@@ -76,7 +79,7 @@ export default React.createClass({
   },
 
   toAssembler() {
-    BattleActionCreators.reset();
+    Store.dispatch(BattleActionCreators.reset());
     window.location.hash = "";
   },
 
@@ -98,7 +101,7 @@ export default React.createClass({
         <h1>Save the Earth</h1>
         <p>The rules are pretty simple. You´ll face random enemies one after another, and you can beat them if any of your 
         characters have appeared in the same comic as them. See how many you can defeat!</p>
-        <Team characters={this.state.team.characters} />
+        <Team characters={this.state.team.characters} store={Store} />
         {this.renderVillain()}
       </div>
     );

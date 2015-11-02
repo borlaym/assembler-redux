@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import ActionCreators from '../actions/SearchCharacterActionCreators';
 import Config from '../Config';
-import Store from '../Store';
 
 export default React.createClass({
 
@@ -12,11 +11,11 @@ export default React.createClass({
   TYPING_COOLDOWN_DURATION: 600,
 
   getInitialState() {
-    return Store.getState().search.toJSON();
+    return this.props.store.getState().search.toJSON();
   },
 
   componentDidMount() {
-    this.unsubscribe = Store.subscribe(this._onChange);
+    this.unsubscribe = this.props.store.subscribe(this._onChange);
   },
 
   componentWillUnmount() {
@@ -24,7 +23,7 @@ export default React.createClass({
   },
 
   _onChange() {
-    this.setState(Store.getState().search.toJSON());
+    this.setState(this.props.store.getState().search.toJSON());
   },
 
   typingCooldown: null,
@@ -38,13 +37,13 @@ export default React.createClass({
       clearTimeout(this.typingCooldown);
     }
     this.typingCooldown = setTimeout(() => {
-      Store.dispatch(ActionCreators.startSearch(this.refs.search.value));
+      this.props.store.dispatch(ActionCreators.startSearch(this.refs.search.value));
     }, this.TYPING_COOLDOWN_DURATION);
   },
 
   resetSearch() {
     this.refs.search.value = '';
-    Store.dispatch(ActionCreators.startSearch(""));
+    this.props.store.dispatch(ActionCreators.startSearch(""));
   },
 
   /**
@@ -83,7 +82,7 @@ export default React.createClass({
    * Checks of you reached the team size limit
    */
   canAddNewMember() {
-    return Store.getState().team.count() < Config.TEAM_MAX_SIZE;
+    return this.props.store.getState().team.count() < Config.TEAM_MAX_SIZE;
   },
 
   searchPlaceholder() {
