@@ -10,6 +10,6 @@ $ npm start
 ```
 ## Notes
 
-Uses a basic Flux architecture.
-Bootstrapped with [a yeoman generator](https://github.com/banderson/generator-flux-react).
+Uses Redux.
+Forked from [https://github.com/borlaym/assembler](https://github.com/borlaym/assembler).
 
