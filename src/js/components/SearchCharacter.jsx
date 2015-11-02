@@ -24,7 +24,6 @@ export default React.createClass({
   },
 
   _onChange() {
-    console.log(Store.getState().search.toJSON());
     this.setState(Store.getState().search.toJSON());
   },
 

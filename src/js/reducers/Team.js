@@ -5,7 +5,7 @@ export default function(state = Immutable.Set(), action) {
 
   switch (action.type) {
   case ActionTypes.TEAM_ADD_CHARACTER:
-    return state.push(action.character);
+    return state.add(action.character);
   case ActionTypes.TEAM_REMOVE_CHARACTER:
     return state.remove(action.character);
   case ActionTypes.BATTLE_START:

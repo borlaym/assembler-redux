@@ -3,7 +3,6 @@ import _ from 'lodash';
 import Immutable from 'immutable';
 import formatCharacter from '../helpers/formatCharacter';
 
-// data storage
 const defaultState = Immutable.Map({
   isLoading: false,
   error: null,
@@ -25,9 +24,10 @@ export default function(state = defaultState, action) {
     });
   case ActionTypes.CHARACTER_SEARCH_FINISHED:
   case ActionTypes.CHARACTER_SEARCH_FAILED:
+    var data = action.data || [];
     return state.merge({
       isLoading: false,
-      results: action.data.map( (data) => formatCharacter(data))
+      results: data.map( (data) => formatCharacter(data))
     });
   default:
     return state;

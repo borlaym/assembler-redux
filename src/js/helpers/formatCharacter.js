@@ -8,6 +8,6 @@ export default function(character) {
     description: character.description,
     name: character.name,
     thumbnail: character.thumbnail.path + '/portrait_xlarge.' + character.thumbnail.extension,
-    isFighting: true
+    isFighting: false
   }
 }

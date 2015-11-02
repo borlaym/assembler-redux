@@ -32,7 +32,7 @@ export default React.createClass({
    * Called when a character is selected from the search component
    */
   selectCharacter(character) {
-    TeamActionCreators.addCharacter(character);
+    Store.dispatch(TeamActionCreators.addCharacter(character));
   },
 
   render() {
@@ -45,7 +45,7 @@ export default React.createClass({
         <p>Assemble your own Avengers team!</p>
         <SearchCharacter onSelect={this.selectCharacter} />
         <h3>Your team:</h3>
-        <Team />
+        <Team store={Store} />
         <Link to="battle" className={hidden}>Save the Earth!</Link>
       </div>
     );
