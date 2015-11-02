@@ -2,6 +2,7 @@ import { ActionTypes } from '../Constants';
 import Config from '../Config';
 import URL from 'url';
 import async from 'async';
+import commonComic from '../helpers/commonComic';
 
 /* eslint-disable no-console */
 
@@ -48,7 +49,24 @@ export default {
         //Then figth with all characters
         setTimeout(() => {
           async.series(characters.map((character) => {
-            return self.fight.bind(self, character, villain, dispatch)
+            return function(characterFinished) {
+              commonComic(character, villain, function(won) {
+                if (won) {
+                  dispatch({
+                    type: ActionTypes.BATTLE_RESULTS,
+                    villain
+                  });
+                  return setTimeout(characterFinished.bind(null, true), 2000);
+                } else {
+                  dispatch({
+                    type: ActionTypes.BATTLE_RESULTS,
+                    hero: character
+                  });
+                  return setTimeout(characterFinished, 2000);
+                }
+              });
+            };
+
           }), function(victory) {
             if (victory) return dispatch({
                 type: ActionTypes.BATTLE_VICTORY,
@@ -65,46 +83,6 @@ export default {
       });
 
     }
-
-  },
-
-  // /**
-  //  * Check if the two characters had a common comic
-  //  */
-  fight(character, villain, dispatch, callback) {
-
-    var ids = [character.id, villain.id].join(',');
-
-    var url = URL.format({
-      host: Config.MARVEL_API_URI_HOST,
-      pathname: Config.MARVEL_API_URI_PATHNAME + Config.MARVEL_API_URI_COMICS,
-      query: {
-        sharedAppearances: ids,
-        apikey: Config.MARVEL_API_PUBLIC_KEY,
-        format: 'comic',
-        formatType: 'comic',
-        noVariants: true
-      }
-    });
-
-    fetch(url)
-    .then((response) => response.json())
-    .then((json) => {
-      if (json.data.total >= Config.COMICS_NEEDED_TO_WIN) {
-        dispatch({
-          type: ActionTypes.BATTLE_RESULTS,
-          villain
-        });
-        return setTimeout(callback.bind(null, true), 2000);
-      } else {
-        dispatch({
-          type: ActionTypes.BATTLE_RESULTS,
-          hero: character
-        });
-        return setTimeout(callback, 2000);
-      }
-    })
-    .catch((err) => console.log(err));
 
   },
 
